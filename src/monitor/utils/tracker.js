@@ -4,6 +4,7 @@ const host = "cn-beijing.log.aliyuncs.com";
 
 function getExtraData() {
   return {
+    title: document.title,
     // 浏览器信息
     userAgent: navigator.userAgent,
     // 当前页面的URL
@@ -11,14 +12,6 @@ function getExtraData() {
     timestamp: Date.now(),
   };
 }
-
-// 'https://sls.ali-test-project.cn-hangzhou.log.aliyuncs.com/logstores/ali-test-logstore/track';
-
-//const logstoreName = 'ali-test-logstore';
-// const project = 'ali-test-project';
-// const region = 'cn-hangzhou';
-// const host = `sls.jason-monitor.cn-hangzhou.log.aliyuncs.com`;
-// const url = `https://sls.jason-monitor.cn-hangzhou.log.aliyuncs.com/logstores/${logstoreName}/track`;
 
 class SendTraker {
   constructor() {
@@ -32,16 +25,16 @@ class SendTraker {
     // 对象的值不能是数字（阿里云的要求）
     for (let key in log) {
       if (typeof log[key] === "number") {
-        log[key] = log[key].toString();
+        log[key] = `${log[key]}`;
       }
     }
 
     console.log("log", log);
 
-    this.xhr.open("POST", this.url, true);
     let body = JSON.stringify({
       __logs__: [log],
     });
+    this.xhr.open("POST", this.url, true);
     this.xhr.setRequestHeader("Content-Type", "application/json");
     this.xhr.setRequestHeader("x-log-bodyrawsize", data.length);
     this.xhr.setRequestHeader("x-log-apiversion", "0.6.0");
